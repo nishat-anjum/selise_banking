@@ -94,3 +94,21 @@ OR
 - **Status Code**: `200 OK`
 - **Response Body**:
   ```Transfer successful```
+  
+
+### Following are some API error response
+```
+{
+    "status": "BAD_REQUEST",
+    "message": "400 BAD_REQUEST \"Sender must not be null\""
+}
+
+{
+    "status": "NOT_FOUND",
+    "message": "404 NOT_FOUND \"Account Record not found with No [12345678900]\""
+}
+
+{
+    "status": "BAD_REQUEST",
+    "message": "400 BAD_REQUEST \"Amount must not be negative\""
+```
