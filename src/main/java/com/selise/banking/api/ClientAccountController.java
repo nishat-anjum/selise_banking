@@ -19,7 +19,7 @@ public class ClientAccountController {
     private final ClientAccountService clientAccountService;
 
     @GetMapping("/{accountNumber}")
-    public ResponseEntity<ApiResponse<ClientAccountRecord>> getAccountDetails(@PathVariable String accountNumber) {
+    public ResponseEntity<ApiResponse<ClientAccountRecord>> getAccountDetails(@PathVariable(required = false) String accountNumber) {
         log.debug("Request to load account detail");
         ClientAccountRecord clientAccountRecord = clientAccountService.getClientAccountRecord(accountNumber);
         ApiResponse<ClientAccountRecord> apiResponse = ApiResponse.buildSuccessRestResponse(HttpStatus.OK, "SUCCESS", clientAccountRecord);

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -23,6 +24,8 @@ public class ClientAccountService {
     private final ClientAccountInfoRepository clientAccountInfoRepository;
 
     public ClientAccountRecord getClientAccountRecord(String accountNo) {
+        if (isNullOrEmpty(accountNo))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AccountNo must not be null");
         Optional<ClientAccountInfo> clientAccountInfo = clientAccountInfoRepository.findByAccountNumber(accountNo);
         return clientAccountInfo.map(ClientAccountRecord::fromEntity)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -32,6 +35,16 @@ public class ClientAccountService {
     @Transactional
     public void transferAmount(TransferRequest transferRequest) {
         log.debug("Bank transfer request from: {}, to : {}", transferRequest.sender(), transferRequest.receiver());
+
+        if (isNullOrEmpty(transferRequest.sender()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sender must not be null");
+
+        if (isNullOrEmpty(transferRequest.receiver()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receiver must not be null");
+
+        if (transferRequest.amount() == null || transferRequest.amount().compareTo(BigDecimal.ZERO) < 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount must not be negative");
+
         ClientAccountInfo sender = clientAccountInfoRepository.findByAccountNumber(transferRequest.sender())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender not found"));
         ClientAccountInfo recipient = clientAccountInfoRepository.findByAccountNumber(transferRequest.receiver())

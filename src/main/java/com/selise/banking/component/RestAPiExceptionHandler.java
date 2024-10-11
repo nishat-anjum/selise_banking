@@ -1,5 +1,6 @@
 package com.selise.banking.component;
 
+import com.selise.banking.model.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,12 +12,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestAPiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
-        return new ResponseEntity<>(ex.getReason(), ex.getStatusCode());
+    public ResponseEntity<ApiResponse<?>> handleResponseStatusException(ResponseStatusException ex) {
+        ApiResponse<?> apiResponse = ApiResponse.buildErrorRestResponse(ex.getStatusCode(), ex.getMessage());
+        return ResponseEntity.status(apiResponse.getStatus())
+                .body(apiResponse);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ApiResponse<?>> handleGeneralException(Exception ex) {
+        ApiResponse<?> apiResponse = ApiResponse.buildErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+        return ResponseEntity.status(apiResponse.getStatus())
+                .body(apiResponse);
     }
 }
