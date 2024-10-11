@@ -55,14 +55,18 @@ OR
 
 ```json
 {
+  "status": "OK",
+  "message": "SUCCESS",
+  "success": {
     "id": 1,
     "accountNumber": "1234567890",
     "fullName": "John Doe",
     "dateOfBirth": "1980-05-12",
     "accountType": "Savings",
     "accountStatus": "Active",
-    "balance": 4000.00,
-    "lastTransactionDate": "2024-10-11T21:56:34"
+    "balance": 3600.00,
+    "lastTransactionDate": "2024-10-11T22:25:51"
+  }
 }
 ```
 

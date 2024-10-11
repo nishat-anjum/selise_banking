@@ -6,6 +6,8 @@ import com.selise.banking.model.TransferRequest;
 import com.selise.banking.repo.ClientAccountInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.util.StringUtil;
+import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,5 +51,11 @@ public class ClientAccountService {
         recipient.setLastTransactionDate(LocalDateTime.now());
         clientAccountInfoRepository.save(sender);
         clientAccountInfoRepository.save(recipient);
+    }
+
+    private static boolean isNullOrEmpty(String str) {
+        return Optional.ofNullable(str)
+                .map(String::isEmpty)
+                .orElse(true);
     }
 }
